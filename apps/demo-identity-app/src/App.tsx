@@ -242,10 +242,6 @@ const App: React.FC = () => {
     }
   }, [address, identitySDK])
 
-  const handleVerificationSuccess = () => {
-    setIsVerified(true)
-  }
-
   return (
     <TamaguiProvider config={tamaguiConfig}>
       <ScrollView
@@ -348,9 +344,7 @@ const App: React.FC = () => {
             !isVerified &&
             !isWhitelisted ? (
               <YStack alignItems="center" gap={12}>
-                <VerifyButton
-                  onVerificationSuccess={handleVerificationSuccess}
-                />
+                <VerifyButton />
                 <Text fontSize={14} color="$gray10">
                   You need to verify your identity via GoodDollar to continue.
                 </Text>
