@@ -29,6 +29,6 @@ export default defineConfig({
   plugins: [react()],
   define: {
     "process.browser": true,
-    "process.env": process.env,
+    "process.env": process.env.NODE_ENV === "production" ? '"production"' : '"development"',
   },
 });

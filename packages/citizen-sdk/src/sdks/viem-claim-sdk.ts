@@ -272,6 +272,20 @@ export class ClaimSDK {
   private async fvRedirect(): Promise<void> {
     const fvLink = await this.identitySDK.generateFVLink(false, this.rdu, 42220)
     if (typeof window !== "undefined") {
+      try {
+        // Dynamically import Farcaster Mini App SDK to prevent SSR breaking
+        const farcaster: any = await import("@farcaster/miniapp-sdk")
+        const sdk = farcaster.sdk || farcaster.default?.sdk || farcaster.default
+        if (sdk && typeof sdk.isInMiniApp === "function") {
+          const isMiniapp = await sdk.isInMiniApp()
+          if (isMiniapp) {
+            sdk.actions.openUrl(fvLink)
+            return
+          }
+        }
+      } catch (e) {
+        console.warn("Farcaster integration skipped or encountered an error:", e)
+      }
       window.location.href = fvLink
     } else {
       throw new Error(

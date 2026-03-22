@@ -263,4 +263,25 @@ export class IdentitySDK {
       expiryTimestamp,
     }
   }
+
+  /**
+   * Utility to handle and parse the response of the face verification flow from a given URL.
+   * Can be used when the user is deep-linked back to the Farcaster mini-app or standard web app.
+   * @param url - The URL containing the response parameters (defaults to window.location.href)
+   * @returns An object containing the verification status and any error messages.
+   */
+  static parseIdentityResponse(url: string = typeof window !== "undefined" ? window.location.href : ""): { verified: boolean; error?: string } {
+    try {
+      const parsedUrl = new URL(url)
+      const verified = parsedUrl.searchParams.get("verified")
+      const error = parsedUrl.searchParams.get("error") || parsedUrl.searchParams.get("errorDescription")
+
+      return {
+        verified: verified === "true" || verified === "1",
+        error: error || undefined,
+      }
+    } catch (e) {
+      return { verified: false, error: "Invalid URL provided for parsing" }
+    }
+  }
 }
